@@ -3,12 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-/**
- *
- * @author ben Code from the FOSS RSIRCBot project was used in this class.
- * Project can be found at:
- * https://github.com/Talon876/RSIRCBot/blob/master/src/org/nolat/rsircbot
- */
 package logic;
 
 import java.io.BufferedReader;
