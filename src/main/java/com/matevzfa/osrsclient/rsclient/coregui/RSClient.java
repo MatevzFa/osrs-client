@@ -1,72 +1,74 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.matevzfa.osrsclient.rsclient.coregui;
 
-//import net.miginfocom.swing.MigLayout;
-import org.pircbotx.exception.IrcException;
 import com.matevzfa.osrsclient.rsloader.Loader;
-import com.matevzfa.osrsclient.rsloader.Loader.Game;
-import com.matevzfa.osrsclient.rsreflection.Reflector;
+import com.matevzfa.osrsclient.rsloader.Updater;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
-/**
- * @author ben
- */
 public class RSClient {
 
-    public static Reflector reflector = null;
+    private static final int GAME_WIDTH = 765;
+    private static final int GAME_HEIGHT = 503;
 
-    public static void main(String[] args) throws IrcException, IOException {
-
-        initUI();
+    public static void main(String[] args) {
+        try {
+            Updater.checkUpdate();
+            initUI();
+        } catch (IOException e) {
+            System.err.println("Error while updating gamepack: " + e.getMessage());
+        }
     }
 
-    public static void initUI() {
-        JFrame mainwnd = new JFrame("Vanilla Old School RuneScape Client");
+    private static void initUI() {
+
+        JFrame mainwnd = new JFrame("Old School RuneScape");
+
+        mainwnd.setIconImages(
+                Stream.of("icon_16.png", "icon_32.png", "icon_64.png", "icon_128.png")
+                      .map(RSClient::imageFromFile)
+                      .collect(Collectors.toList()));
+
 
         mainwnd.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        mainwnd.setMinimumSize(new Dimension(781, 542));
+        mainwnd.setMinimumSize(new Dimension(GAME_WIDTH, GAME_HEIGHT));
 
         JPanel mainpanel = new JPanel(new GridLayout());
         mainpanel.setBackground(Color.black);
-//        mainpanel.setPreferredSize(new Dimension(765, 503));
-        mainpanel.setMinimumSize(new Dimension(765, 503));
-
-        System.out.println(mainwnd.getWidth());
-        System.out.println(mainwnd.getHeight());
+        mainpanel.setMinimumSize(new Dimension(GAME_WIDTH, GAME_HEIGHT));
 
         mainwnd.getContentPane().add(mainpanel);
-//        JPanel gamepanel = new JPanel(new GridLayout());
-//        gamepanel.setBackground(Color.gray);
-//        gamepanel.setPreferredSize(new Dimension(765, 503));
-//
-//        gamepanel.setVisible(true);
-//        mainpanel.add(gamepanel);
-//        gamepanel.setVisible(true);
 
         mainpanel.setVisible(true);
-//        mainpanel.setPreferredSize(new Dimension(765, 503));
-//        mainwnd.pack();
 
-//        mainwnd.setResizable(false);
-        mainwnd.setVisible(true);
         mainwnd.pack();
 
-        try {
-            final Loader loader = new Loader(Game.OSRS);
-            mainpanel.add(loader.applet);
-            loader.applet.resize(765, 503);
-            reflector = loader.loader;
+        int mainwndMinWidth = GAME_WIDTH + (mainwnd.getWidth() - mainpanel.getWidth());
+        int mainwndMinHeight = GAME_HEIGHT + (mainwnd.getHeight() - mainpanel.getHeight());
+        mainwnd.setMinimumSize(new Dimension(mainwndMinWidth, mainwndMinHeight));
 
+        mainwnd.setVisible(true);
+
+        try {
+            final Loader loader = new Loader();
+            mainpanel.add(loader.getApplet());
+            loader.getApplet().resize(GAME_WIDTH, GAME_HEIGHT);
         } catch (IllegalArgumentException e) {
             e.printStackTrace();
         }
+    }
 
+    private static BufferedImage imageFromFile(String imgName) {
+        try {
+            return ImageIO.read(RSClient.class.getResourceAsStream("/" + imgName));
+        } catch (IOException e) {
+            System.err.println(e.getMessage());
+            return null;
+        }
     }
 }

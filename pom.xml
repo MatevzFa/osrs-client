@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.matevzfa</groupId>
-    <artifactId>osrsclient</artifactId>
+    <artifactId>osrsclient-maven</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
@@ -27,71 +27,31 @@
             </plugin>
 
             <plugin>
+                <!-- Build an executable JAR -->
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-shade-plugin</artifactId>
-                <version>2.1</version>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals><goal>shade</goal></goals>
-                        <configuration>
-                            <transformers>
-                                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                    <mainClass>com.matevzfa.osrsclient.rsclient.coregui.RSClient</mainClass>
-                                </transformer>
-                            </transformers>
-                        </configuration>
-                    </execution>
-                </executions>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.0.2</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <addClasspath>true</addClasspath>
+                            <classpathPrefix></classpathPrefix>
+                            <mainClass>com.matevzfa.osrsclient.rsclient.coregui.RSClient</mainClass>
+                        </manifest>
+                    </archive>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>3.0.2</version>
             </plugin>
 
         </plugins>
     </build>
 
     <dependencies>
-
-        <!-- https://mvnrepository.com/artifact/com.miglayout/miglayout -->
-        <dependency>
-            <groupId>com.miglayout</groupId>
-            <artifactId>miglayout</artifactId>
-            <version>3.7.4</version>
-        </dependency>
-
-        <!-- https://mvnrepository.com/artifact/org.pircbotx/pircbotx -->
-        <dependency>
-            <groupId>org.pircbotx</groupId>
-            <artifactId>pircbotx</artifactId>
-            <version>2.0.1</version>
-        </dependency>
-
-        <!-- https://mvnrepository.com/artifact/org.pushingpixels/trident -->
-        <dependency>
-            <groupId>org.pushingpixels</groupId>
-            <artifactId>trident</artifactId>
-            <version>1.3</version>
-        </dependency>
-
-        <!-- https://mvnrepository.com/artifact/com.googlecode.json-simple/json-simple -->
-        <dependency>
-            <groupId>com.googlecode.json-simple</groupId>
-            <artifactId>json-simple</artifactId>
-            <version>1.1.1</version>
-        </dependency>
-
-        <!-- https://mvnrepository.com/artifact/commons-io/commons-io -->
-        <dependency>
-            <groupId>commons-io</groupId>
-            <artifactId>commons-io</artifactId>
-            <version>2.4</version>
-        </dependency>
-
-        <!-- https://mvnrepository.com/artifact/de.muntjak/tinylaf -->
-        <dependency>
-            <groupId>de.muntjak</groupId>
-            <artifactId>tinylaf</artifactId>
-            <version>1.4.0</version>
-        </dependency>
-
 
     </dependencies>
 

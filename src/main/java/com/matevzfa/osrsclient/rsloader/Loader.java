@@ -1,51 +1,37 @@
 package com.matevzfa.osrsclient.rsloader;
 
-import com.matevzfa.osrsclient.rsreflection.Reflector;
-
 import java.applet.Applet;
 import java.applet.AppletContext;
 import java.applet.AppletStub;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-/***
- *@author Xel
- *@version 1.0
- *@project RSLoader
- *@file Loader.java
- *@date 18.10.2013
- *@time 10.43.48
- */
 public class Loader implements AppletStub {
 
-    public static final HashMap<String, String> Parameters = new HashMap<String, String>();
+    public static final String CLIENT_FILES_DIR = System.getProperty("user.home") + "/.osrs-maven/";
+    public static final File GAMEPACK = new File(CLIENT_FILES_DIR + "gamepack.jar");
+    public static final String GAME_URL = "http://oldschool36.runescape.com/";
 
-    public Game game;
-    public URL GamePack;
-    public Applet applet;
-    public String gameUrl;
-    public String MClass;
-    public Reflector loader;
-    
-    public Loader(Game g) {
-        game = g;
-        if (game == Game.OSRS)
-            gameUrl = "http://oldschool69.runescape.com/";
-        else if (game == Game.RS3)
-            gameUrl = "http://world1.runescape.com/";
-        else
-            gameUrl = "http://classic2.runescape.com/plugin.js?param=o0,a0,s0";
+    private Applet applet;
+
+    private HashMap<String, String> parameters = new HashMap<String, String>();
+    private URL gamePack;
+    private String mainClass;
+    public Loader() {
 
         try {
-            GetParams(new URL(gameUrl));
-            loader = new Reflector(new URL[]{GamePack});
-            applet = (Applet) loader.loadClass(MClass).newInstance();
+            this.getParams(new URL(GAME_URL));
+            URLClassLoader loader = new URLClassLoader(new URL[]{GAMEPACK.toURI().toURL()});
+
+            applet = (Applet) loader.loadClass(mainClass).newInstance();
             applet.setStub(this);
             applet.init();
             applet.setLayout(null);
@@ -57,51 +43,51 @@ public class Loader implements AppletStub {
         }
     }
 
-    public void GetParams(URL url) throws IOException {
+    public Applet getApplet() {
+        return applet;
+    }
+
+    private void getParams(URL url) throws IOException {
+
         BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream()));
+        List<String> params = new ArrayList<>();
+
         String line;
-        List<String> params = new ArrayList<String>();
         while ((line = reader.readLine()) != null) {
+
             if (line.contains("param name"))
                 params.add(line);
-            if (GamePack == null) //retarted block
-                if (line.contains("archive"))
-                    if (game != Game.CLASSIC)
-                        GamePack = new URL(gameUrl + line.substring(line.indexOf("archive=") + 8, line.indexOf(" ');")));
-                    else
-                        GamePack = new URL("http://classic2.runescape.com/" + line.substring(line.indexOf("archive=") + 8, line.indexOf(" code")));
-            if (MClass == null)
-                if (line.contains("code="))
 
-                    MClass = line.substring(line.indexOf("code=") + 5, line.indexOf(".class"));
+            if (gamePack == null && line.contains("archive"))
+                gamePack = new URL(GAME_URL + line.substring(line.indexOf("archive=") + 8, line.indexOf(" ');")));
+
+            if (mainClass == null && line.contains("code="))
+                mainClass = line.substring(line.indexOf("code=") + 5, line.indexOf(".class"));
         }
+
         reader.close();
 
-        for (String s : params) {
-            Parameters.put(GetParamName(s), GetParamValue(s));
-        }
+        params.forEach(s -> parameters.put(getParamName(s), getParamValue(s)));
     }
 
-    public String GetParamName(String param) {
+    private String getParamName(String param) {
         try {
-            int StartIndex = param.indexOf("<param name=\"") + 13;
+            int startIndex = param.indexOf("<param name=\"") + 13;
             int EndIndex = param.indexOf("\" value");
-            return param.substring(StartIndex, EndIndex);
-        } catch (StringIndexOutOfBoundsException e)//classic handles some differently so why not just catch it =P
-        {
-            int StartIndex = param.indexOf("<param name=") + 12;
-            int EndIndex = param.indexOf(" value");
-            return param.substring(StartIndex, EndIndex);
+            return param.substring(startIndex, EndIndex);
+        } catch (StringIndexOutOfBoundsException e) {
+            int startIndex = param.indexOf("<param name=") + 12;
+            int endIndex = param.indexOf(" value");
+            return param.substring(startIndex, endIndex);
         }
     }
 
-    public String GetParamValue(String param) {
+    private String getParamValue(String param) {
         try {
             int StartIndex = param.indexOf("value=\"") + 7;
             int EndIndex = param.indexOf("\">');");
             return param.substring(StartIndex, EndIndex);
-        } catch (StringIndexOutOfBoundsException e)//and again :D
-        {
+        } catch (StringIndexOutOfBoundsException e) {
             int StartIndex = param.indexOf("value=") + 6;
             int EndIndex = param.indexOf(">');");
             return param.substring(StartIndex, EndIndex);
@@ -116,12 +102,7 @@ public class Loader implements AppletStub {
     @Override
     public URL getDocumentBase() {
         try {
-            if (game == Game.OSRS)
-                return new URL("http://oldschool1.runescape.com/");
-            else if (game == Game.RS3)
-                return new URL("http://world1.runescape.com/");
-            else
-                return new URL("http://classic2.runescape.com/");
+            return new URL(GAME_URL);
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
@@ -131,21 +112,16 @@ public class Loader implements AppletStub {
     @Override
     public URL getCodeBase() {
         try {
-            if (game == Game.OSRS)
-                return new URL("http://oldschool1.runescape.com/");
-            else if (game == Game.RS3)
-                return new URL("http://world1.runescape.com/");
-            else
-                return new URL("http://classic2.runescape.com/");
+            return new URL(GAME_URL);
         } catch (MalformedURLException e) {
             e.printStackTrace();
+            return null;
         }
-        return null;
     }
 
     @Override
     public String getParameter(String arg0) {
-        return Parameters.get(arg0);
+        return parameters.get(arg0);
     }
 
     @Override
@@ -156,11 +132,4 @@ public class Loader implements AppletStub {
     @Override
     public void appletResize(int arg0, int arg1) {
     }
-
-    //insane declarations
-    public enum Game {
-        OSRS, RS3, CLASSIC
-    }
-
-
 }
