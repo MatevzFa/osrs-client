@@ -38,7 +38,7 @@ public class RSClient {
         mainwnd.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         mainwnd.setMinimumSize(new Dimension(GAME_WIDTH, GAME_HEIGHT));
 
-        JPanel mainpanel = new JPanel();
+        JPanel mainpanel = new JPanel(new GridLayout());
         mainpanel.setBackground(Color.black);
         mainpanel.setMinimumSize(new Dimension(GAME_WIDTH, GAME_HEIGHT));
 
