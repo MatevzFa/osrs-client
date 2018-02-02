@@ -2,7 +2,6 @@ package com.matevzfa.osrsclient.rsloader;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
-import java.awt.*;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -12,20 +11,17 @@ public class Updater extends JFrame {
 
 
     private static final long serialVersionUID = 1L;
-    public static Updater window;
-    public static boolean downloadComplete;
-    public static int progress = 0;
-    public static boolean downloadRequired = false;
-    public static int maximum = 0;
-    public static int size;
-    public static Thread download = new Thread(new Runnable() {
+    private static boolean downloadComplete;
+    private static int progress = 0;
+    private static int maximum = 0;
+    private static Thread download = new Thread(new Runnable() {
 
         @Override
         public void run() {
 
             try {
                 downloadGamePack();
-                downloadRequired = false;
+                boolean downloadRequired = false;
                 downloadComplete = true;
             } catch (IOException e) {
                 // TODO Auto-generated catch block
@@ -42,29 +38,23 @@ public class Updater extends JFrame {
      */
     public Updater() {
         setTitle("Update Required");
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setBounds(100, 100, 387, 119);
         contentPane = new JPanel();
-//        contentPane.setBackground(Color.BLACK);
         contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
         setContentPane(contentPane);
         contentPane.setLayout(null);
 
         JPanel panel = new JPanel();
-//        panel.setBackground(Color.DARK_GRAY);
         panel.setBounds(10, 11, 349, 58);
         contentPane.add(panel);
         panel.setLayout(null);
 
         JLabel lblUpdatingGamepack = new JLabel("Updating Gamepack");
-//        lblUpdatingGamepack.setForeground(Color.WHITE);
         lblUpdatingGamepack.setBounds(125, 11, 193, 14);
         panel.add(lblUpdatingGamepack);
 
         progressBar = new JProgressBar();
-//        progressBar.setStringPainted(true);
-//        progressBar.setBackground(Color.BLACK);
-//        progressBar.setForeground(Color.ORANGE);
         progressBar.setBounds(10, 36, 329, 14);
         panel.add(progressBar);
     }
@@ -73,7 +63,7 @@ public class Updater extends JFrame {
         return progressBar;
     }
 
-    public static void setSelection(int selection) {
+    private static void setSelection(int selection) {
         progressBar.setValue(selection);
     }
 
@@ -84,7 +74,7 @@ public class Updater extends JFrame {
         if (localJarFileSize == -1 || localJarFileSize != onlineJarFileSize) {
             download.start();
             try {
-                window = new Updater();
+                Updater window = new Updater();
                 window.setVisible(true);
                 progressBar.setMaximum(onlineJarFileSize);
                 while (!downloadComplete) {
@@ -99,13 +89,13 @@ public class Updater extends JFrame {
         }
     }
 
-    public static void downloadGamePack() throws UnsupportedEncodingException, IOException {
+    private static void downloadGamePack() throws UnsupportedEncodingException, IOException {
         BufferedInputStream in = null;
         FileOutputStream out = null;
         try {
             URL url = getLiveJarUrl();
             URLConnection conn = url.openConnection();
-            size = conn.getContentLength();
+            int size = conn.getContentLength();
             Updater.maximum = size;
             if (size < 0) {
                 System.out.println("Could not get the file size");
@@ -166,12 +156,12 @@ public class Updater extends JFrame {
         return gamePack;
     }
 
-    public static int localGamePackSize() {
+    private static int localGamePackSize() {
         File file = Loader.GAMEPACK;
         return (int) file.length();
     }
 
-    public static int getFileSize(URL url) {
+    private static int getFileSize(URL url) {
         HttpURLConnection conn = null;
         try {
             conn = (HttpURLConnection) url.openConnection();
