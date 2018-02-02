@@ -1,5 +1,6 @@
 package com.matevzfa.osrsclient.rsclient.coregui;
 
+import com.matevzfa.osrsclient.config.WindowConfig;
 import com.matevzfa.osrsclient.rsloader.Loader;
 import com.matevzfa.osrsclient.rsloader.Updater;
 
@@ -7,6 +8,8 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.applet.Applet;
 import java.awt.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.stream.Collectors;
@@ -60,6 +63,18 @@ public class RSClient {
         } catch (IllegalArgumentException e) {
             e.printStackTrace();
         }
+
+        mainwnd.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                WindowConfig.storeWindowSize(mainwnd);
+                WindowConfig.storeWindowPosition(mainwnd);
+
+            }
+        });
+
+        WindowConfig.loadWindowSize(mainwnd);
+        WindowConfig.loadWindowPosition(mainwnd);
     }
 
     private static BufferedImage imageFromFile(String imgName) {
