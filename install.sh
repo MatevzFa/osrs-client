@@ -2,7 +2,7 @@
 
 INSTALL_DIR="$HOME/.osrs-maven"
 
-# mvn clean package
+mvn clean package
 
 if [[ ! -d $INSTALL_DIR ]]; then
     echo lul
