@@ -68,10 +68,13 @@ public class RSClient {
             @Override
             public void windowClosing(WindowEvent e) {
                 WindowConfig.storeWindowSize(mainwnd);
+                WindowConfig.storeWindowPosition(mainwnd);
+
             }
         });
 
         WindowConfig.loadWindowSize(mainwnd);
+        WindowConfig.loadWindowPosition(mainwnd);
     }
 
     private static BufferedImage imageFromFile(String imgName) {
