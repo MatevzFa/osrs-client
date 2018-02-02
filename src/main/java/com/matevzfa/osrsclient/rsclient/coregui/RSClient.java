@@ -36,6 +36,7 @@ public class RSClient {
 
         mainwnd.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         mainwnd.getContentPane().setMinimumSize(new Dimension(GAME_WIDTH, GAME_HEIGHT));
+        mainwnd.setVisible(true);
 
         JPanel mainpanel = new JPanel(new GridLayout());
         mainpanel.setBackground(Color.black);
@@ -48,8 +49,6 @@ public class RSClient {
         Insets insets = mainwnd.getInsets();
         mainwnd.setMinimumSize(new Dimension(GAME_WIDTH + insets.left + insets.right,
                                              GAME_HEIGHT + insets.top + insets.bottom));
-
-        mainwnd.setVisible(true);
 
         try {
             final Loader loader = new Loader();
