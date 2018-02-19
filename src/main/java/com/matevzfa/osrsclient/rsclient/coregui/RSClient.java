@@ -37,7 +37,6 @@ public class RSClient {
                                     .map(RSClient::imageFromFile)
                                     .collect(Collectors.toList()));
 
-        mainwnd.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         mainwnd.getContentPane().setMinimumSize(new Dimension(GAME_WIDTH, GAME_HEIGHT));
         mainwnd.setVisible(true);
 
@@ -67,9 +66,14 @@ public class RSClient {
         mainwnd.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
-                WindowConfig.storeWindowSize(mainwnd);
-                WindowConfig.storeWindowPosition(mainwnd);
-
+                int response = JOptionPane.showConfirmDialog(null, " Are you sure you want to quit?", "Quit", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+                if (response == JOptionPane.YES_OPTION) {
+                    WindowConfig.storeWindowSize(mainwnd);
+                    WindowConfig.storeWindowPosition(mainwnd);
+                    mainwnd.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+                } else {
+                    mainwnd.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+                }
             }
         });
 
