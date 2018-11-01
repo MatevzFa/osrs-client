@@ -4,7 +4,7 @@
 #>
 
 
-$INSTALL_DIR = $HOME + "\.osrs-maven\"
+$INSTALL_DIR = $HOME + "\.osrs-client\"
 
 mvn clean package
 

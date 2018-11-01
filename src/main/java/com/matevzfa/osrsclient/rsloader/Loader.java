@@ -1,5 +1,7 @@
 package com.matevzfa.osrsclient.rsloader;
 
+import com.matevzfa.osrsclient.config.WindowConfig;
+
 import java.applet.Applet;
 import java.applet.AppletContext;
 import java.applet.AppletStub;
@@ -16,15 +18,16 @@ import java.util.List;
 
 public class Loader implements AppletStub {
 
-    public static final String CLIENT_FILES_DIR = System.getProperty("user.home") + "/.osrs-maven/";
+    public static final String CLIENT_FILES_DIR = System.getProperty("user.home") + "/.osrs-client/";
     public static final File GAMEPACK = new File(CLIENT_FILES_DIR + "gamepack.jar");
-    public static final String GAME_URL = "http://oldschool36.runescape.com/";
+    public static final String GAME_URL = "http://oldschool" + WindowConfig.getDefaultWorld() + ".runescape.com/";
 
     private Applet applet;
 
-    private HashMap<String, String> parameters = new HashMap<String, String>();
+    private HashMap<String, String> parameters = new HashMap<>();
     private URL gamePack;
     private String mainClass;
+
     public Loader() {
 
         try {

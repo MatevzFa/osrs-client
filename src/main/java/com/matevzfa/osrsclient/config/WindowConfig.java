@@ -14,6 +14,7 @@ public class WindowConfig {
 
     private static final String PROPERTIES_FILE = Loader.CLIENT_FILES_DIR + "properties";
 
+
     public static void storeWindowSize(JFrame window) {
         Properties properties = getProperties();
 
@@ -87,6 +88,18 @@ public class WindowConfig {
         centerWindow(window);
     }
 
+
+    public static String getDefaultWorld() {
+        Properties properties = getProperties();
+
+        if (properties.getProperty("default-world") != null) {
+            return properties.getProperty("default-world");
+        } else {
+            return "35";
+        }
+    }
+
+
     private static void centerWindow(JFrame window) {
         Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
         int x = (int) ((dimension.getWidth() - window.getWidth()) / 2);
@@ -99,7 +112,7 @@ public class WindowConfig {
 
         try {
             File file = new File(PROPERTIES_FILE);
-            file.createNewFile();
+            boolean ignored = file.createNewFile();
             properties.load(new FileInputStream(PROPERTIES_FILE));
         } catch (IOException e) {
             System.err.println(e.getMessage());
