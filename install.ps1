@@ -13,7 +13,7 @@ if (!(Test-Path $INSTALL_DIR)) {
     New-Item -ItemType Directory -Path $INSTALL_DIR
 }
 
-$jarName = Get-ChildItem -Path .\target\osrsclient-maven-*.jar -Name
+$jarName = Get-ChildItem -Path .\target\osrs-client-*.jar -Name
 $iconName = 'osrs.ico'
 
 # Copy the client to the location
