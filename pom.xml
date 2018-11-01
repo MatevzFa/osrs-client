@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.matevzfa</groupId>
-    <artifactId>osrsclient-maven</artifactId>
+    <artifactId>osrs-client</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
@@ -35,7 +35,6 @@
                     <archive>
                         <manifest>
                             <addClasspath>true</addClasspath>
-                            <classpathPrefix></classpathPrefix>
                             <mainClass>com.matevzfa.osrsclient.rsclient.coregui.RSClient</mainClass>
                         </manifest>
                     </archive>
@@ -52,7 +51,12 @@
     </build>
 
     <dependencies>
-
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.4</version>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
 
 

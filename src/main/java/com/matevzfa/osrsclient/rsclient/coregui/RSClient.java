@@ -3,6 +3,7 @@ package com.matevzfa.osrsclient.rsclient.coregui;
 import com.matevzfa.osrsclient.config.WindowConfig;
 import com.matevzfa.osrsclient.rsloader.Loader;
 import com.matevzfa.osrsclient.rsloader.Updater;
+import lombok.extern.java.Log;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -15,21 +16,29 @@ import java.io.IOException;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+@Log
 public class RSClient {
 
     private static final int GAME_WIDTH = 765;
     private static final int GAME_HEIGHT = 503;
 
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) {
         try {
             Updater.checkUpdate();
             initUI();
         } catch (IOException e) {
-            System.err.println("Error while updating gamepack: " + e.getMessage());
+            log.severe("Error while updating the gamepack: " + e.getMessage());
         }
     }
 
-    private static void initUI() throws InterruptedException {
+    private static void initUI() {
+
+        try {
+            // Set System L&F
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        } catch (IllegalAccessException | InstantiationException | UnsupportedLookAndFeelException | ClassNotFoundException e) {
+            log.warning(e.getMessage());
+        }
 
         JFrame mainwnd = new JFrame("Old School RuneScape");
 
@@ -37,6 +46,7 @@ public class RSClient {
                                     .map(RSClient::imageFromFile)
                                     .collect(Collectors.toList()));
 
+        mainwnd.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         mainwnd.getContentPane().setMinimumSize(new Dimension(GAME_WIDTH, GAME_HEIGHT));
         mainwnd.setVisible(true);
 
@@ -44,25 +54,17 @@ public class RSClient {
         mainpanel.setBackground(Color.black);
         mainpanel.setMinimumSize(new Dimension(GAME_WIDTH, GAME_HEIGHT));
 
-        mainwnd.add(mainpanel);
-        mainwnd.getContentPane().setMinimumSize(new Dimension(GAME_WIDTH, GAME_HEIGHT));
-        mainwnd.pack();
-
-        Insets insets = mainwnd.getInsets();
-        mainwnd.setMinimumSize(new Dimension(GAME_WIDTH + insets.left + insets.right,
-                                             GAME_HEIGHT + insets.top + insets.bottom));
 
         try {
             final Loader loader = new Loader();
             Applet applet = loader.getApplet();
-            // sleep for 0.5s so it doesn't hang on Ubuntu (tested on 17.10)
-            Thread.sleep(500);
             mainpanel.add(applet);
             loader.getApplet().resize(GAME_WIDTH, GAME_HEIGHT);
         } catch (IllegalArgumentException e) {
-            e.printStackTrace();
+            log.severe(e.getMessage());
         }
 
+        mainwnd.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         mainwnd.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
@@ -77,15 +79,23 @@ public class RSClient {
             }
         });
 
-        WindowConfig.loadWindowSize(mainwnd);
+
+        mainwnd.add(mainpanel);
+        mainwnd.getContentPane().setMinimumSize(new Dimension(GAME_WIDTH, GAME_HEIGHT));
+        mainwnd.pack();
         WindowConfig.loadWindowPosition(mainwnd);
+        WindowConfig.loadWindowSize(mainwnd);
+        mainwnd.setVisible(true);
+        Insets insets = mainwnd.getInsets();
+        log.fine(String.format("Insets: %d %d %d %d%n", insets.top, insets.right, insets.bottom, insets.left));
+        mainwnd.setMinimumSize(new Dimension(GAME_WIDTH + insets.left + insets.right, GAME_HEIGHT + insets.top + insets.bottom));
     }
 
     private static BufferedImage imageFromFile(String imgName) {
         try {
             return ImageIO.read(RSClient.class.getResourceAsStream("/" + imgName));
         } catch (IOException e) {
-            System.err.println(e.getMessage());
+            log.severe(e.getMessage());
             return null;
         }
     }
