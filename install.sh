@@ -18,8 +18,8 @@ cat << EOF > $HOME/.local/share/applications/osrs.desktop
 Comment=Old School RuneScape
 Terminal=false
 Name=Old School RuneScape
-Exec=java -jar $HOME/.osrs-maven/osrsclient.jar
+Exec=java -jar $INSTALL_DIR/osrsclient.jar
 Type=Application
-Icon=$HOME/.osrs-maven/icon.png
+Icon=$INSTALL_DIR/icon.png
 Keywords=old school;oldschool;runescape;osrs;
 EOF
