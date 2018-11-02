@@ -23,6 +23,7 @@ deploy:
   file: release/osrs-client-*.zip
   on:
     repo: MatevzFa/osrs-client
+    tags: true
 
 before_deploy:
 - scripts/release.sh
