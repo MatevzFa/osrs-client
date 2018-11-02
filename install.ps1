@@ -6,7 +6,7 @@ if (!(Test-Path $INSTALL_DIR)) {
 }
 
 $jarName = Get-ChildItem -Path .\target\osrs-client-*.jar -Name
-$iconName = 'osrs.ico'
+$iconName = 'icon_128.ico'
 
 # Copy the client to the location
 Copy-Item -Path ".\target\$jarName" -Destination $INSTALL_DIR

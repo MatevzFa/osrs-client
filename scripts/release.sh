@@ -10,7 +10,7 @@ mkdir -p release/$UBUNTU_NAME
 
 cp install.ps1 release/$WINDOWS_NAME
 cp --parents target/$NAME_PREFIX-*.jar release/$WINDOWS_NAME
-cp --parents src/main/resources/icon_128.png release/$WINDOWS_NAME
+cp --parents src/main/resources/icon_128.ico release/$WINDOWS_NAME
 
 cp install.sh release/$UBUNTU_NAME
 cp --parents target/$NAME_PREFIX-*.jar release/$UBUNTU_NAME
