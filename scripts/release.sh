@@ -5,6 +5,11 @@ NAME_PREFIX="osrs-client"
 WINDOWS_NAME="$NAME_PREFIX-windows"
 UBUNTU_NAME="$NAME_PREFIX-ubuntu"
 
+if [[ ! -z $TRAVIS_TAG ]]; then
+	WINDOWS_NAME="$WINDOWS_NAME-$TRAVIS_TAG"
+	UBUNTU_NAME="$UBUNTU_NAME-$TRAVIS_TAG"
+fi
+
 mkdir -p release/$WINDOWS_NAME
 mkdir -p release/$UBUNTU_NAME
 
