@@ -1,12 +1,4 @@
-<# 
-    Builds and installs Old School RuneScape client to a Windows machine.
-    The client is installed to %HOME%\.osrs-client\ folder by default.
-#>
-
-
 $INSTALL_DIR = $HOME + "\.osrs-client\"
-
-mvn clean package
 
 # Create directory for client's files
 if (!(Test-Path $INSTALL_DIR)) {

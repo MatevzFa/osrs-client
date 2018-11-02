@@ -1,0 +1,27 @@
+language: java
+dist: trusty
+jdk:
+- openjdk11
+
+cache:
+  directories:
+  - "$HOME/.m2"
+
+script:
+- mvn clean package -U
+
+branches:
+  only:
+  - master
+
+deploy:
+  provider: releases
+  api_key:
+    secure: fqHZhV69OBPhZtv5z4d0EWAn/w3n+Xb75V1INprR/N24pnj1SFdlMbtKnBsXl8ZpAbAqafe1xs+pQNh2r8MkavOTYIzAvjJnkJVhR705yzG8kumsSqREIgVWZGcVKs2g54IOSXsJMto8fotPLgskIKVQGzDrOkGG2bitTDmjqj9NnPShHgKnsVq4bNdfbJ1kZd8pf6wFStJrDHOj/8i2ew9xzIRbxjfHBBJW2ic9toTTwxIgrAxVxXqNLygohBvAkAVYZrDM3v62GQeaX7ZmMu8S9xl51Mpeft4LsrczvRyhYr6JpGPvdiY5ku/xllC3MIpToFaxvnpX1gcuDvZVspa7rew0AVCcRV/pSdZCQ3sZDF3qfjuwcVUYftptHbSjvDzeKiV3MXT/nCON/OVsbVJXRlcHTu8F9kPNCYmXNubhizz0Up9v7Cnlhl3lGEEx6/wbfnZ/wLBHHXYC08OGKKCqjocGm7JpuHcdSbgnPDdfB7b36xC+Lej2S2VqpownTA6bj80VNOLBDJopUzMZmJSWQXmrJ2n40Hx14eqhPdPsc73sHnjoTvWouiW3misrHa5Ykcl0ACrj1dZZtjUWKhch2fS8nN4APQIFFDfcjv7VMobFynaeCY8Fxsa8v6uQfrEfCC2DZixzHKWfOEJztMKtlzoouqpWm2mdqslo6WM=
+  file_glob: true
+  file: release/osrs-client-*.zip
+  on:
+    repo: MatevzFa/osrs-client
+
+before_deploy:
+- scripts/release.sh

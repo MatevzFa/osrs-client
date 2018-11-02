@@ -2,8 +2,6 @@
 
 INSTALL_DIR="$HOME/.osrs-client"
 
-mvn clean package
-
 if [[ ! -d $INSTALL_DIR ]]; then
     mkdir $INSTALL_DIR
 fi
